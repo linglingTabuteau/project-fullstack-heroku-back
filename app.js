@@ -12,9 +12,15 @@ const indexRouter = require('./routes/index');
 const app = express();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const connection = require('./routes/conf');
+const { Client } = require('pg');
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+client.connect();
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -45,7 +51,7 @@ passport.use(new LocalStrategy(
   },
   function (email, password, callback) {
     console.log('callbakc:', callback);
-    connection.query('select * from users where email = ?', email, (err, results) => {
+    client.query('select * from users where email = ?', email, (err, results) => {
       console.log('err:', err);
       if (err) {
         return callback(err, false);
