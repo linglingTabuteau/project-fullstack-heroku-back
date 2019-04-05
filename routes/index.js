@@ -23,7 +23,7 @@ router.get('/films', (req, res) => {
       res.status(500).send('Erreur lors de la récupération des films');
     } else {
       // Si tout s'est bien passé, on envoie le résultat de la requête SQL en tant que JSON.
-      res.json(results);
+      res.json(results.rows);
     }
   });
 });
@@ -50,8 +50,8 @@ router.get('/results', (req, res) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      res.json(results);
-      console.log('Back-results of search', results);
+      res.json(results.rows);
+      console.log('Back-results of search', results.rows);
     }
   });
 });

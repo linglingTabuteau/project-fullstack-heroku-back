@@ -56,7 +56,7 @@ passport.use(new LocalStrategy(
       if (err) {
         return callback(err, false);
       }
-      const user = results[0];
+      const user = results.rows[0];
       if (!user) {
         return callback(null, false);
       }
