@@ -1,1 +1,1 @@
-web: node ./back/bin/start
+web: node ./bin/start
