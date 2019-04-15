@@ -30,9 +30,10 @@ router.get('/films', (req, res) => {
 
 // post /films 
 router.post('/films', (req, res) => {
-  const formData = req.body;
-  console.log('formData:', formData);
-  client.query('INSERT INTO ghibli_film SET ?', formData, (err) => {
+  const {name, url, category, image_url, video_url} = req.body;
+  client.query(`
+    INSERT INTO ghibli_film(name, url, category, image_url, video_url)
+    VALUES('${name}', '${url}', '${category}', '${image_url}', '${video_url}')`, (err) => {
     if (err) {
       console.log('err:', err);
       res.status(500).send('Erreur lors de rejouter un film');
@@ -46,7 +47,9 @@ router.post('/films', (req, res) => {
 router.get('/results', (req, res) => {
   console.log('req.query', req.query);
   const keyword = `%${req.query.keyword}%`;
-  client.query('SELECT * FROM ghibli_film WHERE name LIKE ?', keyword, (err, results) => {
+  client.query(`
+    SELECT * FROM ghibli_film
+    WHERE LOWER(name) LIKE LOWER('${keyword}')`, (err, results) => {
     if (err) {
       res.sendStatus(500);
     } else {
@@ -59,16 +62,13 @@ router.get('/results', (req, res) => {
 // signup below with bcrypt password & Installation de *passport*
 router.post('/auth/signup', (req, res) => {
   // ci-dessous je crypte myPassword qui devient un 'hash'/Store hash in database
-  let hash = bcrypt.hashSync(req.body.password, 10);
-  let newUser = {
-    email: req.body.email,
-    // envoie dans BD => hash au lieu de req.body.password
-    password: hash,
-    name: req.body.name,
-    lastname: req.body.lastname,
-    passwordconfirm: req.body.passwordconfirm,
-  }
-  client.query('INSERT INTO users SET ?', newUser, (err) => {
+  const {email, password, name, lastname, passwordconfirm} = req.body;
+  let hash = bcrypt.hashSync(password, 10);
+
+  // envoie dans BD => hash au lieu de req.body.password
+  client.query(`
+    INSERT INTO users(name, lastname, email, password, passwordconfirm)
+    VALUES ('${name}', '${lastname}', '${email}', '${hash}', '${passwordconfirm}')`, (err) => {
     if (err) {
       res.status(500).send('Erreur lors de creat an account');
     } else {
