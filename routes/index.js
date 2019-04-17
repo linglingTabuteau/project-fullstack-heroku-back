@@ -62,13 +62,13 @@ router.get('/results', (req, res) => {
 // signup below with bcrypt password & Installation de *passport*
 router.post('/signup', (req, res) => {
   // ci-dessous je crypte myPassword qui devient un 'hash'/Store hash in database
-  const {email, password, name, lastname, passwordconfirm} = req.body;
+  const {email, password, name, lastname} = req.body;
   let hash = bcrypt.hashSync(password, 10);
 
   // envoie dans BD => hash au lieu de req.body.password
   client.query(`
-    INSERT INTO users(name, lastname, email, password, passwordconfirm)
-    VALUES ('${name}', '${lastname}', '${email}', '${hash}', '${passwordconfirm}')`, (err) => {
+    INSERT INTO users(name, lastname, email, password)
+    VALUES ('${name}', '${lastname}', '${email}', '${hash}')`, (err) => {
     if (err) {
       res.status(500).send('Erreur lors de creat an account');
     } else {
