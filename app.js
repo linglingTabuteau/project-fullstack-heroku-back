@@ -51,7 +51,7 @@ passport.use(new LocalStrategy(
   },
   function (email, password, callback) {
     console.log('callbakc:', callback);
-    client.query(`select * from users where email=${email}`, (err, results) => {
+    client.query(`select * from users where email='${email}'`, (err, results) => {
       console.log('err:', err);
       if (err) {
         return callback(err, false);
