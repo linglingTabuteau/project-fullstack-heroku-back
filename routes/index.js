@@ -60,7 +60,7 @@ router.get('/results', (req, res) => {
 });
 
 // signup below with bcrypt password & Installation de *passport*
-router.post('/auth/signup', (req, res) => {
+router.post('/signup', (req, res) => {
   // ci-dessous je crypte myPassword qui devient un 'hash'/Store hash in database
   const {email, password, name, lastname, passwordconfirm} = req.body;
   let hash = bcrypt.hashSync(password, 10);
